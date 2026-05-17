@@ -16,16 +16,14 @@ const API = "https://abd-eva-2026-production.up.railway.app"
 const MOCK = {
     resumen: {
         total_registros: 128,
-        total_usuarios: 5, 
+        total_usuarios: 5,
         total_errores: 7,
         tasa_exito: 94.53,
         total_consultas_agente: 43,
-        latencia_promedio_ms: 312,
     },
     rendimiento_vectorial: {
+        latencia_promedio_ms: 312,
         tiempo_promedio_consulta_semantica_ms: 187,
-        consultas_exitosas: 38,
-        consultas_sin_resultado: 5,
         total_vectores_almacenados: 128,
     },
     actividad_usuarios: {
@@ -170,34 +168,36 @@ export default function DashboardPage() {
                         <StatCard icon={AlertTriangle} label="Total Errores" value={d.resumen.total_errores} color="bg-red-500" />
                         <StatCard icon={TrendingUp} label="Tasa de Éxito (%)" value={`${d.resumen.tasa_exito}%`} color="bg-green-500" />
                         <StatCard icon={MessageSquare} label="Consultas al Agente" value={d.resumen.total_consultas_agente} color="bg-violet-500" />
-                        <StatCard icon={Clock} label="Latencia Promedio de Inserción (ms)" value={`${d.resumen.latencia_promedio_ms} ms`} color="bg-amber-500" />
                     </div>
                 )}
 
-
                 {/* Tab 2: Rendimiento Vectorial */}
                 {tab === 1 && (
-                    <div className="flex flex-col gap-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <StatCard icon={Zap} label="Tiempo Consulta Semántica (ms)" value={`${d.rendimiento_vectorial.tiempo_promedio_consulta_semantica_ms} ms`} color="bg-[#2d5a9b]" />
-                            <StatCard icon={CheckCircle} label="Consultas Exitosas" value={d.rendimiento_vectorial.consultas_exitosas} color="bg-green-500" />
-                            <StatCard icon={XCircle} label="Sin Resultado" value={d.rendimiento_vectorial.consultas_sin_resultado} color="bg-red-500" />
-                            <StatCard icon={Database} label="Vectores Almacenados" value={d.rendimiento_vectorial.total_vectores_almacenados} color="bg-violet-500" />
-                        </div>
-                        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                            <h3 className="text-sm font-semibold text-gray-700 mb-4">Consultas Exitosas vs Sin Resultado</h3>
-                            <ResponsiveContainer width="100%" height={250}>
-                                <BarChart data={[{ name: "Consultas", Exitosas: d.rendimiento_vectorial.consultas_exitosas, "Sin Resultado": d.rendimiento_vectorial.consultas_sin_resultado }]}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                                    <YAxis tick={{ fontSize: 12 }} />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="Exitosas" fill="#22c55e" radius={[4, 4, 0, 0]} />
-                                    <Bar dataKey="Sin Resultado" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <StatCard
+                            icon={Clock}
+                            label="Latencia Promedio Inserción (ms)"
+                            value={`${d.rendimiento_vectorial.latencia_promedio_ms} ms`}
+                            color="bg-amber-500"
+                        />
+                        <StatCard
+                            icon={Zap}
+                            label="Tiempo Consulta Semántica (ms)"
+                            value={`${d.rendimiento_vectorial.tiempo_promedio_consulta_semantica_ms} ms`}
+                            color="bg-[#2d5a9b]"
+                        />
+                        <StatCard
+                            icon={CheckCircle}
+                            label="Tiempo Generación Embeddings (ms)"
+                            value={`${d.rendimiento_vectorial.tiempo_promedio_generacion_embeddings_ms} ms`}
+                            color="bg-green-500"
+                        />
+                        <StatCard
+                            icon={Database}
+                            label="Vectores Almacenados"
+                            value={d.rendimiento_vectorial.total_vectores_almacenados}
+                            color="bg-violet-500"
+                        />
                     </div>
                 )}
 
