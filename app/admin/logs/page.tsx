@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   LayoutDashboard, Users, FileText, LogOut,
-  BookOpen, CheckCircle, XCircle, AlertTriangle
+  BookOpen, CheckCircle, XCircle, AlertTriangle, Activity
 } from "lucide-react"
 
 const API = "https://abd-eva-2026-production.up.railway.app"
@@ -105,7 +105,6 @@ export default function LogsPage() {
   }, [])
 
   const handleFiltrar = () => fetchLogs(filtroEstado, filtroAccion)
-
   const r = resumen || MOCK_RESUMEN
 
   return (
@@ -196,7 +195,7 @@ export default function LogsPage() {
                         {l.estado}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-gray-600">{l.latencia_ms} ms</td>
+                    <td className="px-5 py-3 text-gray-600">{l.latencia_ms ?? 0} ms</td>
                     <td className="px-5 py-3 text-gray-500 max-w-[220px] truncate">{l.mensajelog}</td>
                     <td className="px-5 py-3 text-gray-500 font-mono text-xs">{l.idusu?.slice(0, 8)}...</td>
                     <td className="px-5 py-3 text-gray-500">{new Date(l.fechalog).toLocaleString("es-ES")}</td>
@@ -209,6 +208,41 @@ export default function LogsPage() {
             </table>
           </div>
         )}
+
+        {/* Por acción — NUEVO */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-6">
+          <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+            <Activity className="h-4 w-4 text-[#2d5a9b]" />
+            <h3 className="text-sm font-semibold text-gray-700">Resumen por Acción</h3>
+          </div>
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                {["Acción", "Total", "Exitosos", "Errores", "Latencia Promedio"].map(h => (
+                  <th key={h} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {(r.por_accion ?? []).map((a: any, i: number) => (
+                <tr key={i} className="hover:bg-gray-50">
+                  <td className="px-6 py-3 text-gray-700 font-medium">{a.accion}</td>
+                  <td className="px-6 py-3 text-gray-600">{a.total}</td>
+                  <td className="px-6 py-3">
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">{a.exitosos}</span>
+                  </td>
+                  <td className="px-6 py-3">
+                    <span className="px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">{a.errores}</span>
+                  </td>
+                  <td className="px-6 py-3 text-gray-600">{a.latencia_promedio_ms} ms</td>
+                </tr>
+              ))}
+              {(r.por_accion ?? []).length === 0 && (
+                <tr><td colSpan={5} className="px-6 py-6 text-center text-gray-400">Sin datos</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
         {/* Errores por usuario */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -224,7 +258,7 @@ export default function LogsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {r.errores_por_usuario.map((e: any, i: number) => (
+              {(r.errores_por_usuario ?? []).map((e: any, i: number) => (
                 <tr key={i} className="hover:bg-gray-50">
                   <td className="px-6 py-3 text-gray-700 font-mono text-xs">{e.idusu}</td>
                   <td className="px-6 py-3">
@@ -232,12 +266,13 @@ export default function LogsPage() {
                   </td>
                 </tr>
               ))}
-              {r.errores_por_usuario.length === 0 && (
+              {(r.errores_por_usuario ?? []).length === 0 && (
                 <tr><td colSpan={2} className="px-6 py-6 text-center text-gray-400">Sin errores registrados</td></tr>
               )}
             </tbody>
           </table>
         </div>
+
       </main>
     </div>
   )
