@@ -56,12 +56,23 @@ const MOCK = {
 
 function Sidebar() {
     const router = useRouter()
-    const handleLogout = () => {
-        localStorage.clear()
-        router.push("/")
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem("token")
+        try {
+            await fetch(`${API}/api/Auth/logout`, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
+            })
+        } catch {
+            
+        } finally {
+            localStorage.clear()
+            router.push("/")
+        }
     }
     return (
-        <aside className="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col shadow-sm">
+        <aside className="w-64 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col shadow-sm">
             <div className="px-6 py-6 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                     <BookOpen className="h-6 w-6 text-[#2d5a9b]" />
