@@ -24,6 +24,7 @@ const MOCK = {
     rendimiento_vectorial: {
         latencia_promedio_ms: 312,
         tiempo_promedio_consulta_semantica_ms: 187,
+        tiempo_promedio_generacion_embeddings_m: 1113,
         total_vectores_almacenados: 128,
     },
     actividad_usuarios: {
@@ -42,6 +43,10 @@ const MOCK = {
         ],
     },
     calidad_datos: {
+        registros_incompletos: 5,
+        registros_duplicados_o_similares: 9,
+        nivel_promedio_similitud: 0.92,
+        registros_rechazados: 5,
         ultimos_errores: [
             { accion: "insertar_registro", estado: "error", mensajelog: "Título vacío", fechalog: "2025-05-10T13:00:00" },
             { accion: "busqueda_semantica", estado: "error", mensajelog: "Texto vacío", fechalog: "2025-05-09T11:30:00" },
@@ -245,35 +250,68 @@ export default function DashboardPage() {
                     </div>
                 )}
 
-                {/* Tab 4: Calidad de Datos */}
                 {tab === 3 && (
-                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-100">
-                            <h3 className="text-sm font-semibold text-gray-700">Últimos Errores</h3>
+                    <div className="space-y-6">
+                        {/* Métricas principales */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <StatCard
+                                icon={AlertTriangle}
+                                label="Registros Incompletos"
+                                value={d.calidad_datos.registros_incompletos}
+                                color="bg-yellow-500"
+                            />
+                            <StatCard
+                                icon={XCircle}
+                                label="Duplicados o Similares"
+                                value={d.calidad_datos.registros_duplicados_o_similares}
+                                color="bg-red-500"
+                            />
+                            <StatCard
+                                icon={TrendingUp}
+                                label="Nivel Promedio Similitud"
+                                value={d.calidad_datos.nivel_promedio_similitud}
+                                color="bg-green-500"
+                            />
+                            <StatCard
+                                icon={Zap}
+                                label="Registros Rechazados"
+                                value={d.calidad_datos.registros_rechazados}
+                                color="bg-purple-500"
+                            />
                         </div>
-                        <table className="w-full text-sm">
-                            <thead className="bg-gray-50">
-                                <tr>
-                                    {["Acción", "Estado", "Mensaje", "Fecha"].map(h => (
-                                        <th key={h} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                                {d.calidad_datos.ultimos_errores.map((e: any, i: number) => (
-                                    <tr key={i} className="hover:bg-gray-50">
-                                        <td className="px-6 py-3 text-gray-700">{e.accion}</td>
-                                        <td className="px-6 py-3">
-                                            <span className="px-2 py-1 rounded-full text-xs bg-red-100 text-red-700 font-medium">{e.estado}</span>
-                                        </td>
-                                        <td className="px-6 py-3 text-gray-600">{e.mensajelog}</td>
-                                        <td className="px-6 py-3 text-gray-500">{new Date(e.fechalog).toLocaleDateString("es-ES")}</td>
+
+                        {/* Tabla de últimos errores */}
+                        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-100">
+                                <h3 className="text-sm font-semibold text-gray-700">Últimos Errores</h3>
+                            </div>
+                            <table className="w-full text-sm">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        {["Acción", "Estado", "Mensaje", "Fecha"].map(h => (
+                                            <th key={h} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{h}</th>
+                                        ))}
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {d.calidad_datos.ultimos_errores.map((e: any, i: number) => (
+                                        <tr key={i} className="hover:bg-gray-50">
+                                            <td className="px-6 py-3 text-gray-700">{e.accion}</td>
+                                            <td className="px-6 py-3">
+                                                <span className="px-2 py-1 rounded-full text-xs bg-red-100 text-red-700 font-medium">{e.estado}</span>
+                                            </td>
+                                            <td className="px-6 py-3 text-gray-600">{e.mensajelog}</td>
+                                            <td className="px-6 py-3 text-gray-500">
+                                                {new Date(e.fechalog).toLocaleDateString("es-ES")}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 )}
+
             </main>
         </div>
     )
