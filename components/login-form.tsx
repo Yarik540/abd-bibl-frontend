@@ -50,6 +50,7 @@ export function LoginForm() {
       localStorage.setItem("token", data.token)
       localStorage.setItem("rol", data.rol)
       localStorage.setItem("usuario", data.usuario)
+      localStorage.setItem("userId", data.userId)
 
       // Redirigir según rol
       if (data.rol === "administrador") {

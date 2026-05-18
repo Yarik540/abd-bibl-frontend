@@ -1,10 +1,10 @@
 "use client"
-
+import N8nPopout from "@/components/N8nPopout"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   BookOpen, LogOut, PlusCircle, List, Search,
-  CheckCircle, AlertTriangle, Clock, LayoutDashboard
+  CheckCircle, AlertTriangle, Clock, MessageCircle
 } from "lucide-react"
 
 const API = "https://abd-eva-2026-production.up.railway.app"
@@ -69,14 +69,8 @@ function Sidebar({
 
       <div className="px-6 py-3 border-b border-gray-100">
         <p className="text-xs text-gray-400">Bienvenido,</p>
-
-        <p className="text-sm font-medium text-gray-700 truncate">
-          {usuario}
-        </p>
-
-        <p className="text-xs text-[#2d5a9b] mt-1">
-          {rolVisual}
-        </p>
+        <p className="text-sm font-medium text-gray-700 truncate">{usuario}</p>
+        <p className="text-xs text-[#2d5a9b] mt-1">{rolVisual}</p>
       </div>
 
       <nav className="flex-1 px-4 py-6 flex flex-col gap-1">
@@ -103,6 +97,7 @@ export default function ClientePage() {
   const [tab, setTab] = useState("nuevo")
   const [usuario, setUsuario] = useState("")
   const [rolVisual, setRolVisual] = useState("")
+  const [showN8n, setShowN8n] = useState(false)
 
   const [form, setForm] = useState({ titulolibro: "", autor: "", tipo: "", contenidoreg: "" })
   const [formLoading, setFormLoading] = useState(false)
@@ -129,8 +124,6 @@ export default function ClientePage() {
     }
 
     setUsuario(usu)
-
-    // SOLO visual
     setRolVisual(rol === "cliente" ? "Estudiante" : rol)
   }, [])
 
@@ -157,7 +150,6 @@ export default function ClientePage() {
       })
 
       if (!res.ok) {
-        // El backend devuelve el mensaje como string plano, no como JSON
         const texto = await res.text()
         setFormError(texto || "Error al guardar el registro.")
         return
@@ -199,7 +191,8 @@ export default function ClientePage() {
         active={tab}
         setActive={setTab}
         usuario={usuario}
-        rolVisual={rolVisual} />
+        rolVisual={rolVisual}
+      />
 
       <main className="flex-1 overflow-y-auto h-screen px-8 py-8">
         <div className="mb-6">
@@ -395,6 +388,19 @@ export default function ClientePage() {
           </div>
         )}
       </main>
+
+      {/* Botón flotante Agente IA */}
+      <button
+        onClick={() => setShowN8n(v => !v)}
+        className="fixed bottom-6 right-6 z-40 bg-[#2d5a9b] hover:bg-[#244a82] text-white rounded-full shadow-lg px-5 py-3 flex items-center gap-2 transition-colors"
+        title="Consultar agente IA"
+      >
+        <MessageCircle className="h-5 w-5" />
+        <span className="text-sm font-medium">Agente IA</span>
+      </button>
+
+      {/* Popout n8n — siempre montado para conservar el historial */}
+      <N8nPopout onClose={() => setShowN8n(false)} visible={showN8n} />
     </div>
   )
 }
