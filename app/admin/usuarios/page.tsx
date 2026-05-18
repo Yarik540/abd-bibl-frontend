@@ -1,10 +1,13 @@
 "use client"
 
+
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import N8nPopout from "@/components/N8nPopout"
 import {
     LayoutDashboard, Users, FileText, LogOut,
-    BookOpen, Search, X, ChevronRight
+    BookOpen, Search, X, ChevronRight,
+    PlusCircle, List, CheckCircle, AlertTriangle, Clock, MessageCircle
 } from "lucide-react"
 
 const API = "https://abd-eva-2026-production.up.railway.app"
@@ -118,6 +121,7 @@ export default function UsuariosPage() {
     const [search, setSearch] = useState("")
     const [drawer, setDrawer] = useState<any>(null)
     const [drawerLoading, setDrawerLoading] = useState(false)
+    const [showN8n, setShowN8n] = useState(false)
 
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -359,6 +363,20 @@ export default function UsuariosPage() {
                     </div>
                 </div>
             )}
+            {/* Botón flotante Agente IA */}
+            <button
+                onClick={() => setShowN8n(v => !v)}
+                className="fixed bottom-6 right-6 z-40 bg-[#2d5a9b] hover:bg-[#244a82] text-white rounded-full shadow-lg px-5 py-3 flex items-center gap-2 transition-colors"
+            >
+                <MessageCircle className="h-5 w-5" />
+                <span className="text-sm font-medium">Agente IA</span>
+            </button>
+
+            {/* Popout */}
+            <N8nPopout
+                onClose={() => setShowN8n(false)}
+                visible={showN8n}
+            />
         </div>
     )
 }

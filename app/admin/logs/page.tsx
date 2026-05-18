@@ -1,10 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import N8nPopout from "@/components/N8nPopout"
 import { useRouter } from "next/navigation"
 import {
     LayoutDashboard, Users, FileText, LogOut,
-    BookOpen, CheckCircle, XCircle, AlertTriangle, Activity, ChevronLeft, ChevronRight
+    BookOpen, CheckCircle, XCircle, AlertTriangle,
+    Activity, ChevronLeft, ChevronRight,
+    MessageCircle
 } from "lucide-react"
 
 const API = "https://abd-eva-2026-production.up.railway.app"
@@ -92,6 +95,7 @@ export default function LogsPage() {
     const [filtroEstado, setFiltroEstado] = useState("")
     const [filtroAccion, setFiltroAccion] = useState("")
     const [pagina, setPagina] = useState(1)
+    const [showN8n, setShowN8n] = useState(false)
 
     const fetchLogs = async (estado: string, accion: string) => {
         const token = localStorage.getItem("token")
@@ -333,6 +337,18 @@ export default function LogsPage() {
                     </table>
                 </div>
             </main>
+                  {/* Botón flotante Agente IA */}
+      <button
+        onClick={() => setShowN8n(v => !v)}
+        className="fixed bottom-6 right-6 z-40 bg-[#2d5a9b] hover:bg-[#244a82] text-white rounded-full shadow-lg px-5 py-3 flex items-center gap-2 transition-colors"
+        title="Consultar agente IA"
+      >
+        <MessageCircle className="h-5 w-5" />
+        <span className="text-sm font-medium">Agente IA</span>
+      </button>
+
+      {/* Popout n8n — siempre montado para conservar el historial */}
+      <N8nPopout onClose={() => setShowN8n(false)} visible={showN8n} />
         </div>
     )
 }

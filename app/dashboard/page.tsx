@@ -1,12 +1,15 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import N8nPopout from "@/components/N8nPopout"
 import { useRouter } from "next/navigation"
 import {
     LayoutDashboard, Users, FileText, LogOut,
     BookOpen, AlertTriangle, CheckCircle, MessageSquare,
-    Clock, Database, TrendingUp, XCircle, Zap
+    Clock, Database, TrendingUp, XCircle, Zap,
+    PlusCircle, List, Search, MessageCircle
 } from "lucide-react"
+
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from "recharts"
@@ -134,6 +137,7 @@ export default function DashboardPage() {
     const [data, setData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
+    const [showN8n, setShowN8n] = useState(false)
 
     useEffect(() => {
         const token = localStorage.getItem("token")
@@ -207,7 +211,7 @@ export default function DashboardPage() {
                         <StatCard
                             icon={Clock}
                             label="Latencia Promedio Inserción (ms)"
-                            value={`${d.rendimiento_vectorial.latencia_promedio_ms} ms`}
+                           value={`${Number(d.rendimiento_vectorial.latencia_promedio_ms).toFixed(3)} ms`}
                             color="bg-amber-500"
                         />
                         <StatCard
@@ -416,6 +420,20 @@ export default function DashboardPage() {
                 )}
 
             </main>
+            {/* Botón flotante Agente IA */}
+            <button
+                onClick={() => setShowN8n(v => !v)}
+                className="fixed bottom-6 right-6 z-40 bg-[#2d5a9b] hover:bg-[#244a82] text-white rounded-full shadow-lg px-5 py-3 flex items-center gap-2 transition-colors"
+            >
+                <MessageCircle className="h-5 w-5" />
+                <span className="text-sm font-medium">Agente IA</span>
+            </button>
+
+            {/* Popout */}
+            <N8nPopout
+                onClose={() => setShowN8n(false)}
+                visible={showN8n}
+            />
         </div>
     )
 }
