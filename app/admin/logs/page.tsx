@@ -447,27 +447,6 @@ export default function LogsPage() {
 
                 </div>
             </main>
-
-            {/* Botón flotante Agente IA */}
-            <button
-                onClick={() => setShowN8n(v => !v)}
-                className="fixed bottom-6 right-6 z-40 text-white flex items-center gap-2.5 transition-all"
-                style={{
-                    background: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
-                    borderRadius: "14px",
-                    padding: "12px 20px",
-                    boxShadow: "0 4px 14px rgba(59,130,246,0.4), 0 2px 6px rgba(0,0,0,0.12)",
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    letterSpacing: "-0.01em"
-                }}
-                onMouseEnter={e => (e.currentTarget.style.boxShadow = "0 6px 20px rgba(59,130,246,0.5), 0 2px 8px rgba(0,0,0,0.15)")}
-                onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 4px 14px rgba(59,130,246,0.4), 0 2px 6px rgba(0,0,0,0.12)")}>
-                <MessageCircle className="h-4 w-4" />
-                Agente IA
-            </button>
-
-            <N8nPopout onClose={() => setShowN8n(false)} visible={showN8n} />
         </div>
     )
 }
