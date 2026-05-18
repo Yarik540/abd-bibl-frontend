@@ -180,7 +180,7 @@ export default function ClientePage() {
     const token = localStorage.getItem("token")
     setBusquedaLoading(true)
     try {
-      const res = await fetch(`${API}/api/busqueda?texto=${encodeURIComponent(textoBusqueda)}`, {
+      const res = await fetch(`${API}/api/busqueda/conlog?texto=${encodeURIComponent(textoBusqueda)}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       const data = await res.json()
