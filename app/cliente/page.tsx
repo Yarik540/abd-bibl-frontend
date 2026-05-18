@@ -30,7 +30,17 @@ const TABS = [
   { id: "busqueda", label: "Búsqueda Semántica", icon: Search },
 ]
 
-function Sidebar({ active, setActive, usuario }: { active: string, setActive: (t: string) => void, usuario: string }) {
+function Sidebar({
+  active,
+  setActive,
+  usuario,
+  rolVisual
+}: {
+  active: string,
+  setActive: (t: string) => void,
+  usuario: string,
+  rolVisual: string
+}) {
   const router = useRouter()
 
   const handleLogout = async () => {
@@ -54,12 +64,19 @@ function Sidebar({ active, setActive, usuario }: { active: string, setActive: (t
           <BookOpen className="h-6 w-6 text-[#2d5a9b]" />
           <span className="font-bold text-[#2d5a9b] text-lg">Biblioteca Lumina</span>
         </div>
-        <p className="text-xs text-gray-400 mt-1">Panel Cliente</p>
+        <p className="text-xs text-gray-400 mt-1">Panel Estudiante</p>
       </div>
 
       <div className="px-6 py-3 border-b border-gray-100">
         <p className="text-xs text-gray-400">Bienvenido,</p>
-        <p className="text-sm font-medium text-gray-700 truncate">{usuario}</p>
+
+        <p className="text-sm font-medium text-gray-700 truncate">
+          {usuario}
+        </p>
+
+        <p className="text-xs text-[#2d5a9b] mt-1">
+          {rolVisual}
+        </p>
       </div>
 
       <nav className="flex-1 px-4 py-6 flex flex-col gap-1">
@@ -85,6 +102,7 @@ export default function ClientePage() {
   const router = useRouter()
   const [tab, setTab] = useState("nuevo")
   const [usuario, setUsuario] = useState("")
+  const [rolVisual, setRolVisual] = useState("")
 
   const [form, setForm] = useState({ titulolibro: "", autor: "", tipo: "", contenidoreg: "" })
   const [formLoading, setFormLoading] = useState(false)
@@ -104,8 +122,16 @@ export default function ClientePage() {
     const token = localStorage.getItem("token")
     const rol = localStorage.getItem("rol")
     const usu = localStorage.getItem("usuario") || "Cliente"
-    if (!token || rol !== "cliente") { router.push("/"); return }
+
+    if (!token || rol !== "cliente") {
+      router.push("/")
+      return
+    }
+
     setUsuario(usu)
+
+    // SOLO visual
+    setRolVisual(rol === "cliente" ? "Estudiante" : rol)
   }, [])
 
   useEffect(() => {
@@ -169,7 +195,11 @@ export default function ClientePage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar active={tab} setActive={setTab} usuario={usuario} />
+      <Sidebar
+        active={tab}
+        setActive={setTab}
+        usuario={usuario}
+        rolVisual={rolVisual} />
 
       <main className="flex-1 overflow-y-auto h-screen px-8 py-8">
         <div className="mb-6">

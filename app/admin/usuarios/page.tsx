@@ -86,7 +86,7 @@ function Sidebar({ active }: { active: string }) {
         { href: "/admin/logs", icon: FileText, label: "Logs" },
     ]
     return (
-      <aside className="w-64 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col shadow-sm">
+        <aside className="w-64 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col shadow-sm">
             <div className="px-6 py-6 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                     <BookOpen className="h-6 w-6 text-[#2d5a9b]" />
@@ -157,10 +157,15 @@ export default function UsuariosPage() {
         }
     }
 
-    const filtrados = usuarios.filter(u =>
-        u.email.toLowerCase().includes(search.toLowerCase()) ||
-        u.rol.toLowerCase().includes(search.toLowerCase())
-    )
+    const filtrados = usuarios.filter(u => {
+        const rolVisual =
+            u.rol === "cliente" ? "estudiante" : u.rol
+
+        return (
+            u.email.toLowerCase().includes(search.toLowerCase()) ||
+            rolVisual.toLowerCase().includes(search.toLowerCase())
+        )
+    })
 
     if (loading) return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -207,8 +212,11 @@ export default function UsuariosPage() {
                                 <tr key={u.idusu} className="hover:bg-gray-50 transition-colors">
                                     <td className="px-5 py-3 font-medium text-gray-800">{u.email}</td>
                                     <td className="px-5 py-3">
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${u.rol === "administrador" ? "bg-[#2d5a9b]/10 text-[#2d5a9b]" : "bg-gray-100 text-gray-600"}`}>
-                                            {u.rol}
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${u.rol === "administrador"
+                                            ? "bg-[#2d5a9b]/10 text-[#2d5a9b]"
+                                            : "bg-gray-100 text-gray-600"
+                                            }`}>
+                                            {u.rol === "cliente" ? "estudiante" : u.rol}
                                         </span>
                                     </td>
                                     <td className="px-5 py-3 text-gray-700">{u.stats.total_registros}</td>
