@@ -52,6 +52,18 @@ const MOCK = {
             { accion: "busqueda_semantica", estado: "error", mensajelog: "Texto vacío", fechalog: "2025-05-09T11:30:00" },
         ],
     },
+    agente_conversacional: {
+        total_preguntas: 43,
+        consultas_exitosas: 38,
+        consultas_sin_resultados: 5,
+        preguntas_frecuentes: [
+            { pregunta: "¿Cuántos registros tengo?", frecuencia: 12 },
+            { pregunta: "¿Qué libros he guardado?", frecuencia: 8 },
+            { pregunta: "¿Cuál es mi último registro?", frecuencia: 6 },
+            { pregunta: "¿Tengo libros de poesía?", frecuencia: 5 },
+            { pregunta: "¿Cuántos autores distintos tengo?", frecuencia: 4 },
+        ]
+    },
 }
 
 function Sidebar() {
@@ -65,7 +77,7 @@ function Sidebar() {
                 headers: { Authorization: `Bearer ${token}` },
             })
         } catch {
-            
+
         } finally {
             localStorage.clear()
             router.push("/")
@@ -114,7 +126,7 @@ function StatCard({ icon: Icon, label, value, color }: { icon: any, label: strin
     )
 }
 
-const TABS = ["Resumen General", "Rendimiento Vectorial", "Actividad de Usuarios", "Calidad de Datos"]
+const TABS = ["Resumen General", "Rendimiento Vectorial", "Actividad de Usuarios", "Calidad de Datos", "Agente Conversacional"]
 
 export default function DashboardPage() {
     const router = useRouter()
@@ -130,13 +142,15 @@ export default function DashboardPage() {
 
         const fetchData = async () => {
             try {
-                const res = await fetch(`${API}/api/Dashboard`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                })
-                if (res.status === 401 || res.status === 403) { router.push("/"); return }
-                if (!res.ok) throw new Error("Error al cargar datos")
-                const json = await res.json()
-                setData(json)
+                const [resMain, resAgente] = await Promise.all([
+                    fetch(`${API}/api/Dashboard`, { headers: { Authorization: `Bearer ${token}` } }),
+                    fetch(`${API}/api/Consultas/metricas`, { headers: { Authorization: `Bearer ${token}` } }),
+                ])
+
+                const jsonMain = await resMain.json()
+                const jsonAgente = resAgente.ok ? await resAgente.json() : MOCK.agente_conversacional
+
+                setData({ ...jsonMain, agente_conversacional: jsonAgente })
             } catch {
                 setData(MOCK) // usar mock si falla
             } finally {
@@ -319,6 +333,84 @@ export default function DashboardPage() {
                                     ))}
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                )}
+                {tab === 4 && (
+                    <div className="flex flex-col gap-6">
+                        {/* Métricas principales */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <StatCard
+                                icon={MessageSquare}
+                                label="Total Preguntas"
+                                value={d.agente_conversacional.total_preguntas}
+                                color="bg-violet-500"
+                            />
+                            <StatCard
+                                icon={CheckCircle}
+                                label="Consultas Exitosas"
+                                value={d.agente_conversacional.consultas_exitosas}
+                                color="bg-green-500"
+                            />
+                            <StatCard
+                                icon={XCircle}
+                                label="Sin Resultados"
+                                value={d.agente_conversacional.consultas_sin_resultados}
+                                color="bg-red-500"
+                            />
+                            <StatCard
+                                icon={TrendingUp}
+                                label="Tasa de Éxito (%)"
+                                value={`${((d.agente_conversacional.consultas_exitosas / d.agente_conversacional.total_preguntas) * 100).toFixed(1)}%`}
+                                color="bg-[#2d5a9b]"
+                            />
+                        </div>
+
+                        {/* Preguntas frecuentes */}
+                        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+                            <div className="px-6 py-4 border-b border-gray-100">
+                                <h3 className="text-sm font-semibold text-gray-700">Top 5 Preguntas Frecuentes</h3>
+                            </div>
+                            <div className="divide-y divide-gray-100">
+                                {d.agente_conversacional.preguntas_frecuentes.map((p: any, i: number) => (
+                                    <div key={i} className="px-6 py-4 flex items-center gap-4">
+                                        <span className="text-xs font-bold text-white bg-[#2d5a9b] rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">
+                                            {i + 1}
+                                        </span>
+                                        <p className="text-sm text-gray-700 flex-1">{p.pregunta}</p>
+                                        <div className="flex items-center gap-3 flex-shrink-0">
+                                            <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                <div
+                                                    className="h-full bg-[#2d5a9b] rounded-full"
+                                                    style={{
+                                                        width: `${(p.frecuencia / d.agente_conversacional.preguntas_frecuentes[0].frecuencia) * 100}%`
+                                                    }}
+                                                />
+                                            </div>
+                                            <span className="text-xs text-gray-500 w-16 text-right">{p.frecuencia} veces</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Gráfico exitosas vs sin resultados */}
+                        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-4">Distribución de Consultas</h3>
+                            <ResponsiveContainer width="100%" height={220}>
+                                <BarChart data={[
+                                    { name: "Exitosas", total: d.agente_conversacional.consultas_exitosas },
+                                    { name: "Sin resultados", total: d.agente_conversacional.consultas_sin_resultados },
+                                ]}>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                                    <YAxis tick={{ fontSize: 12 }} />
+                                    <Tooltip />
+                                    <Bar dataKey="total" radius={[4, 4, 0, 0]}
+                                        fill="#2d5a9b"
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
                         </div>
                     </div>
                 )}
