@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   BookOpen, LogOut, PlusCircle, List, Search,
-  MessageSquare, CheckCircle, AlertTriangle, Clock
+  CheckCircle, AlertTriangle, Clock, LayoutDashboard
 } from "lucide-react"
 
 const API = "https://abd-eva-2026-production.up.railway.app"
@@ -30,23 +30,71 @@ const TABS = [
   { id: "busqueda", label: "Búsqueda Semántica", icon: Search },
 ]
 
+function Sidebar({ active, setActive, usuario }: { active: string, setActive: (t: string) => void, usuario: string }) {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token")
+    try {
+      await fetch(`${API}/api/Auth/logout`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    } catch { }
+    finally {
+      localStorage.clear()
+      router.push("/")
+    }
+  }
+
+  return (
+    <aside className="w-64 h-screen sticky top-0 bg-white border-r border-gray-200 flex flex-col shadow-sm">
+      <div className="px-6 py-6 border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <BookOpen className="h-6 w-6 text-[#2d5a9b]" />
+          <span className="font-bold text-[#2d5a9b] text-lg">Biblioteca Lumina</span>
+        </div>
+        <p className="text-xs text-gray-400 mt-1">Panel Cliente</p>
+      </div>
+
+      <div className="px-6 py-3 border-b border-gray-100">
+        <p className="text-xs text-gray-400">Bienvenido,</p>
+        <p className="text-sm font-medium text-gray-700 truncate">{usuario}</p>
+      </div>
+
+      <nav className="flex-1 px-4 py-6 flex flex-col gap-1">
+        {TABS.map(({ id, label, icon: Icon }) => (
+          <button key={id} onClick={() => setActive(id)}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors w-full text-left ${active === id ? "bg-[#2d5a9b]/10 text-[#2d5a9b] font-medium" : "text-gray-600 hover:bg-gray-100"}`}>
+            <Icon className="h-4 w-4" /> {label}
+          </button>
+        ))}
+      </nav>
+
+      <div className="px-4 py-4 border-t border-gray-100">
+        <button onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-50 text-sm w-full transition-colors">
+          <LogOut className="h-4 w-4" /> Cerrar sesión
+        </button>
+      </div>
+    </aside>
+  )
+}
+
 export default function ClientePage() {
   const router = useRouter()
   const [tab, setTab] = useState("nuevo")
   const [usuario, setUsuario] = useState("")
 
-  // Nuevo registro
   const [form, setForm] = useState({ titulolibro: "", autor: "", tipo: "", contenidoreg: "" })
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState("")
   const [formSuccess, setFormSuccess] = useState("")
   const [latencia, setLatencia] = useState<number | null>(null)
 
-  // Mis registros
   const [registros, setRegistros] = useState<any[]>([])
   const [regLoading, setRegLoading] = useState(false)
 
-  // Búsqueda
   const [textoBusqueda, setTextoBusqueda] = useState("")
   const [busquedaLoading, setBusquedaLoading] = useState(false)
   const [busquedaResultado, setBusquedaResultado] = useState<any>(null)
@@ -60,9 +108,6 @@ export default function ClientePage() {
     setUsuario(usu)
   }, [])
 
-  const handleLogout = () => { localStorage.clear(); router.push("/") }
-
-  // Cargar mis registros
   useEffect(() => {
     if (tab !== "mis-registros") return
     const token = localStorage.getItem("token")
@@ -74,15 +119,8 @@ export default function ClientePage() {
       .finally(() => setRegLoading(false))
   }, [tab])
 
-  // Enviar registro
   const handleSubmit = async () => {
-    setFormError("")
-    setFormSuccess("")
-    setLatencia(null)
-    if (!form.titulolibro.trim()) return setFormError("El título del libro es obligatorio.")
-    if (!form.autor.trim()) return setFormError("El autor es obligatorio.")
-    if (!form.tipo.trim()) return setFormError("El tipo es obligatorio.")
-
+    setFormError(""); setFormSuccess(""); setLatencia(null)
     const token = localStorage.getItem("token")
     setFormLoading(true)
     try {
@@ -91,8 +129,15 @@ export default function ClientePage() {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify(form)
       })
+
+      if (!res.ok) {
+        // El backend devuelve el mensaje como string plano, no como JSON
+        const texto = await res.text()
+        setFormError(texto || "Error al guardar el registro.")
+        return
+      }
+
       const data = await res.json()
-      if (!res.ok) { setFormError(data?.message || "Error al guardar el registro."); return }
       setFormSuccess("Registro guardado exitosamente.")
       setLatencia(data.latencia_ms)
       setForm({ titulolibro: "", autor: "", tipo: "", contenidoreg: "" })
@@ -103,10 +148,8 @@ export default function ClientePage() {
     }
   }
 
-  // Búsqueda semántica
   const handleBusqueda = async () => {
-    setBusquedaError("")
-    setBusquedaResultado(null)
+    setBusquedaError(""); setBusquedaResultado(null)
     if (!textoBusqueda.trim()) return setBusquedaError("Ingresa un texto para buscar.")
     const token = localStorage.getItem("token")
     setBusquedaLoading(true)
@@ -125,41 +168,18 @@ export default function ClientePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-2">
-          <BookOpen className="h-6 w-6 text-[#2d5a9b]" />
-          <span className="font-bold text-[#2d5a9b] text-lg">Biblioteca Lumina</span>
-          <span className="ml-3 px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600">Cliente</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">Bienvenido, <span className="font-medium">{usuario}</span></span>
-          <button onClick={handleLogout} className="flex items-center gap-2 text-red-500 hover:text-red-700 text-sm transition-colors">
-            <LogOut className="h-4 w-4" /> Salir
-          </button>
-        </div>
-      </header>
+    <div className="flex min-h-screen bg-gray-50">
+      <Sidebar active={tab} setActive={setTab} usuario={usuario} />
 
-      <main className="max-w-4xl mx-auto px-6 py-8">
+      <main className="flex-1 overflow-y-auto h-screen px-8 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800">Mi Espacio</h1>
           <p className="text-sm text-gray-500">Gestiona tus registros y consultas</p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 mb-6 border-b border-gray-200">
-          {TABS.map(({ id, label, icon: Icon }) => (
-            <button key={id} onClick={() => setTab(id)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${tab === id ? "border-[#2d5a9b] text-[#2d5a9b]" : "border-transparent text-gray-500 hover:text-gray-700"}`}>
-              <Icon className="h-4 w-4" /> {label}
-            </button>
-          ))}
-        </div>
-
         {/* Tab: Nuevo Registro */}
         {tab === "nuevo" && (
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 max-w-xl mx-auto">
             <h2 className="text-base font-semibold text-gray-800 mb-5">Ingresar nuevo registro</h2>
             <div className="flex flex-col gap-4">
               <div>
@@ -202,16 +222,13 @@ export default function ClientePage() {
 
               {formError && (
                 <div className="flex items-center gap-2 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-                  <AlertTriangle className="h-4 w-4 flex-shrink-0" />
-                  <span>{formError}</span>
+                  <AlertTriangle className="h-4 w-4 flex-shrink-0" /> {formError}
                 </div>
               )}
-
               {formSuccess && (
                 <div className="flex flex-col gap-1 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 flex-shrink-0" />
-                    <span>{formSuccess}</span>
+                    <CheckCircle className="h-4 w-4 flex-shrink-0" /> {formSuccess}
                   </div>
                   {latencia !== null && (
                     <div className="flex items-center gap-2 text-xs text-green-600 pl-6">
@@ -224,10 +241,7 @@ export default function ClientePage() {
               <button onClick={handleSubmit} disabled={formLoading}
                 className="w-full py-3 rounded-lg bg-[#2d5a9b] text-white font-semibold text-sm hover:bg-[#244a82] transition-colors disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2">
                 {formLoading ? (
-                  <>
-                    <div className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" />
-                    Guardando...
-                  </>
+                  <><div className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" /> Guardando...</>
                 ) : (
                   <><PlusCircle className="h-4 w-4" /> Guardar Registro</>
                 )}
@@ -292,11 +306,9 @@ export default function ClientePage() {
                 </div>
                 <button onClick={handleBusqueda} disabled={busquedaLoading}
                   className="px-5 py-2.5 rounded-lg bg-[#2d5a9b] text-white text-sm font-medium hover:bg-[#244a82] transition-colors disabled:opacity-70 flex items-center gap-2">
-                  {busquedaLoading ? (
-                    <div className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" />
-                  ) : (
-                    <Search className="h-4 w-4" />
-                  )}
+                  {busquedaLoading
+                    ? <div className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" />
+                    : <Search className="h-4 w-4" />}
                   Buscar
                 </button>
               </div>
