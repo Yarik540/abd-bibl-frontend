@@ -420,8 +420,12 @@ export default function LogsPage() {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr style={{ background: "#f8fafc" }}>
-                                    <th className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Usuario (ID)</th>
-                                    <th className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Errores</th>
+                                    <th className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                                        Usuario
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                                        Total Errores
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -430,20 +434,28 @@ export default function LogsPage() {
                                         onMouseEnter={ev => (ev.currentTarget.style.background = "#fafbfc")}
                                         onMouseLeave={ev => (ev.currentTarget.style.background = "transparent")}>
                                         <td className="px-6 py-3.5">
-                                            <span className="text-[12px] font-mono text-slate-600">{e.idusu}</span>
+                                            {/* Mostrar solo el nombre */}
+                                            <span className="text-[12px] font-semibold text-slate-700">{e.nombre}</span>
                                         </td>
                                         <td className="px-6 py-3.5">
                                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
-                                                style={{ background: "#fef2f2", color: "#dc2626" }}>{e.total_errores}</span>
+                                                style={{ background: "#fef2f2", color: "#dc2626" }}>
+                                                {e.total_errores}
+                                            </span>
                                         </td>
                                     </tr>
                                 ))}
                                 {(r.errores_por_usuario ?? []).length === 0 && (
-                                    <tr><td colSpan={2} className="px-6 py-8 text-center text-[13px] text-slate-400">Sin errores registrados</td></tr>
+                                    <tr>
+                                        <td colSpan={2} className="px-6 py-8 text-center text-[13px] text-slate-400">
+                                            Sin errores registrados
+                                        </td>
+                                    </tr>
                                 )}
                             </tbody>
                         </table>
                     </div>
+
 
                 </div>
             </main>

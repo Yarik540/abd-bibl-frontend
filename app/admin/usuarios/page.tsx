@@ -258,7 +258,7 @@ export default function UsuariosPage() {
                         <table className="w-full text-sm">
                             <thead>
                                 <tr style={{ background: "#f8fafc" }}>
-                                    {["Email", "Rol", "Registros", "Errores", "Consultas", "Exitosas", "Creado", "Acciones"].map(h => (
+                                    {["Email", "Rol", "Registros", "Errores", "Consultas", "Creado", "Acciones"].map(h => (
                                         <th key={h} className="px-5 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
                                     ))}
                                 </tr>
@@ -293,10 +293,6 @@ export default function UsuariosPage() {
                                             <span className="text-[13px] text-slate-600">{u.stats.total_consultas_agente}</span>
                                         </td>
                                         <td className="px-5 py-3.5">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
-                                                style={{ background: "#f0fdf4", color: "#16a34a" }}>{u.stats.consultas_exitosas}</span>
-                                        </td>
-                                        <td className="px-5 py-3.5">
                                             <span className="text-[12px] text-slate-400">{new Date(u.created_at).toLocaleDateString("es-ES")}</span>
                                         </td>
                                         <td className="px-5 py-3.5">
@@ -312,7 +308,7 @@ export default function UsuariosPage() {
                                 ))}
                                 {filtrados.length === 0 && (
                                     <tr>
-                                        <td colSpan={8} className="px-5 py-10 text-center text-[13px] text-slate-400">
+                                        <td colSpan={7} className="px-5 py-10 text-center text-[13px] text-slate-400">
                                             No se encontraron usuarios
                                         </td>
                                     </tr>

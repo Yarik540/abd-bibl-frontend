@@ -303,10 +303,20 @@ export default function DashboardPage() {
                                 </div>
                                 <div className="px-4 py-5">
                                     <ResponsiveContainer width="100%" height={220}>
-                                        <BarChart data={d.actividad_usuarios.registros_por_usuario.map((r: any) => ({ ...r, idusu: r.idusu.slice(0, 8) + "…" }))}
-                                            barSize={36}>
+                                        <BarChart
+                                            data={d.actividad_usuarios.registros_por_usuario.map((r: any) => ({
+                                                ...r,
+                                                nombre: r.nombre // usar directamente el nombre
+                                            }))}
+                                            barSize={36}
+                                        >
                                             <CartesianGrid strokeDasharray="3 3" stroke="#f1f4f8" vertical={false} />
-                                            <XAxis dataKey="idusu" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+                                            <XAxis
+                                                dataKey="nombre"
+                                                tick={{ fontSize: 11, fill: "#94a3b8" }}
+                                                axisLine={false}
+                                                tickLine={false}
+                                            />
                                             <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
                                             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(59,130,246,0.04)" }} />
                                             <Bar dataKey="total" radius={[6, 6, 0, 0]}>
@@ -315,6 +325,7 @@ export default function DashboardPage() {
                                                 ))}
                                             </Bar>
                                         </BarChart>
+
                                     </ResponsiveContainer>
                                 </div>
                             </div>
@@ -330,16 +341,27 @@ export default function DashboardPage() {
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr style={{ background: "#f8fafc" }}>
-                                            {["Título", "Autor", "Tipo", "Fecha"].map(h => (
-                                                <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
+                                            {["Estudiante", "Título", "Autor", "Tipo", "Fecha"].map(h => (
+                                                <th
+                                                    key={h}
+                                                    className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider"
+                                                >
+                                                    {h}
+                                                </th>
                                             ))}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {d.actividad_usuarios.ultimos_registros.map((r: any, i: number) => (
-                                            <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}
+                                            <tr
+                                                key={i}
+                                                style={{ borderTop: "1px solid #f1f4f8" }}
                                                 onMouseEnter={e => (e.currentTarget.style.background = "#fafbfc")}
-                                                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+                                                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                                            >
+                                                <td className="px-6 py-3.5">
+                                                    <span className="text-[13px] font-semibold text-slate-700">{r.nombre}</span>
+                                                </td>
                                                 <td className="px-6 py-3.5">
                                                     <span className="text-[13px] font-semibold text-slate-700">{r.titulolibro}</span>
                                                 </td>
@@ -347,18 +369,23 @@ export default function DashboardPage() {
                                                     <span className="text-[13px] text-slate-500">{r.autor}</span>
                                                 </td>
                                                 <td className="px-6 py-3.5">
-                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
-                                                        style={{ background: "#eff6ff", color: "#2563eb" }}>
+                                                    <span
+                                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
+                                                        style={{ background: "#eff6ff", color: "#2563eb" }}
+                                                    >
                                                         {r.tipo}
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-3.5">
-                                                    <span className="text-[12px] text-slate-400">{new Date(r.fechareg).toLocaleDateString("es-ES")}</span>
+                                                    <span className="text-[12px] text-slate-400">
+                                                        {new Date(r.fechareg).toLocaleDateString("es-ES")}
+                                                    </span>
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     )}
@@ -366,11 +393,11 @@ export default function DashboardPage() {
                     {/* Tab 3: Calidad de Datos */}
                     {tab === 3 && (
                         <div className="flex flex-col gap-5">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <StatCard icon={AlertTriangle} label="Registros Incompletos" value={d.calidad_datos.registros_incompletos} accent="#f59e0b" />
                                 <StatCard icon={XCircle} label="Duplicados o Similares" value={d.calidad_datos.registros_duplicados_o_similares} accent="#ef4444" />
                                 <StatCard icon={TrendingUp} label="Similitud Promedio" value={d.calidad_datos.nivel_promedio_similitud} accent="#10b981" />
-                                <StatCard icon={Zap} label="Registros Rechazados" value={d.calidad_datos.registros_rechazados} accent="#8b5cf6" />
+                                {/* Tarjeta de Registros Rechazados eliminada */}
                             </div>
 
                             <div className="rounded-xl overflow-hidden" style={{ background: "#fff", border: "1px solid #e8ecf0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
@@ -381,7 +408,7 @@ export default function DashboardPage() {
                                 <table className="w-full text-sm">
                                     <thead>
                                         <tr style={{ background: "#f8fafc" }}>
-                                            {["Acción", "Estado", "Mensaje", "Fecha"].map(h => (
+                                            {["Estudiante", "Acción", "Estado", "Mensaje", "Fecha"].map(h => (
                                                 <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
                                             ))}
                                         </tr>
@@ -391,6 +418,9 @@ export default function DashboardPage() {
                                             <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}
                                                 onMouseEnter={ev => (ev.currentTarget.style.background = "#fafbfc")}
                                                 onMouseLeave={ev => (ev.currentTarget.style.background = "transparent")}>
+                                                <td className="px-6 py-3.5">
+                                                    <span className="text-[13px] font-semibold text-slate-700">{e.nombre}</span>
+                                                </td>
                                                 <td className="px-6 py-3.5">
                                                     <span className="text-[13px] font-medium text-slate-600">{e.accion}</span>
                                                 </td>
@@ -414,6 +444,7 @@ export default function DashboardPage() {
                             </div>
                         </div>
                     )}
+
 
                     {/* Tab 4: Agente Conversacional */}
                     {tab === 4 && (
