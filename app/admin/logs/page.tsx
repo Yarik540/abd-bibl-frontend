@@ -319,7 +319,10 @@ export default function LogsPage() {
                                             </td>
                                             <td className="px-6 py-3.5">
                                                 <span className="text-[12px] text-slate-400">
-                                                    {new Date(l.fechalog).toLocaleString("es-EC", { timeZone: "America/Guayaquil" })}
+                                                    {new Date(`${l.fechalog}Z`).toLocaleString("es-EC", {
+    timeZone: "America/Guayaquil",
+    hour12: false
+})}
                                                 </span>
                                             </td>
                                         </tr>

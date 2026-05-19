@@ -372,7 +372,9 @@ export default function DashboardPage() {
                                                     </td>
                                                     <td className="px-6 py-3.5">
                                                         <span className="text-[12px] text-slate-400">
-                                                            {new Date(r.fechareg).toLocaleString("es-EC", { timeZone: "America/Guayaquil" })}
+                                                            {new Date(r.fechareg + "Z").toLocaleString("es-EC", {
+                                                                timeZone: "America/Guayaquil"
+                                                            })}
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -440,7 +442,10 @@ export default function DashboardPage() {
                                                     </td>
                                                     <td className="px-6 py-3.5">
                                                         <span className="text-[12px] text-slate-400">
-                                                            {new Date(e.fechalog).toLocaleString("es-EC", { timeZone: "America/Guayaquil" })}
+                                                            {new Date(`${e.fechalog}Z`).toLocaleString("es-EC", {
+                                                                timeZone: "America/Guayaquil",
+                                                                hour12: false
+                                                            })}
                                                         </span>
                                                     </td>
                                                 </tr>
