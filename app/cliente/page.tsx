@@ -468,10 +468,6 @@ export default function ClientePage() {
                             <Clock className="h-3 w-3" />
                             {new Date(r.fechareg).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
                           </span>
-                          <button className="text-[11px] font-semibold px-3 py-1.5 rounded-full transition-opacity"
-                            style={{ background: cfg.light, color: cfg.color, border: "none", cursor: "pointer" }}>
-                            Ver más
-                          </button>
                         </div>
                       </div>
                     )
