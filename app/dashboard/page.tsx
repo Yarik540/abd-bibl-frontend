@@ -33,27 +33,27 @@ const MOCK = {
     },
     actividad_usuarios: {
         registros_por_usuario: [
-            { idusu: "usr-001", total: 34 },
-            { idusu: "usr-002", total: 21 },
-            { idusu: "usr-003", total: 18 },
-            { idusu: "usr-004", total: 55 },
+            { nombre: "Manuel", total: 34 },
+            { nombre: "Victor", total: 21 },
+            { nombre: "Yarik Gonzales", total: 18 },
+            { nombre: "Admin Test", total: 55 },
         ],
         ultimos_registros: [
-            { titulolibro: "Cien años de soledad", autor: "García Márquez", tipo: "novela", fechareg: "2025-05-10T14:22:00" },
-            { titulolibro: "El principito", autor: "Saint-Exupéry", tipo: "cuento", fechareg: "2025-05-09T10:11:00" },
-            { titulolibro: "1984", autor: "Orwell", tipo: "distopía", fechareg: "2025-05-08T08:45:00" },
-            { titulolibro: "Don Quijote", autor: "Cervantes", tipo: "novela", fechareg: "2025-05-07T16:30:00" },
-            { titulolibro: "La Odisea", autor: "Homero", tipo: "épica", fechareg: "2025-05-06T09:00:00" },
+            { nombre: "Manuel", titulolibro: "Cien años de soledad", autor: "García Márquez", tipo: "novela", fechareg: "2025-05-10T14:22:00" },
+            { nombre: "Victor", titulolibro: "El principito", autor: "Saint-Exupéry", tipo: "cuento", fechareg: "2025-05-09T10:11:00" },
+            { nombre: "Yarik Gonzales", titulolibro: "1984", autor: "Orwell", tipo: "distopía", fechareg: "2025-05-08T08:45:00" },
+            { nombre: "Admin Test", titulolibro: "Don Quijote", autor: "Cervantes", tipo: "novela", fechareg: "2025-05-07T16:30:00" },
+            { nombre: "Manuel", titulolibro: "La Odisea", autor: "Homero", tipo: "épica", fechareg: "2025-05-06T09:00:00" },
         ],
     },
     calidad_datos: {
         registros_incompletos: 5,
         registros_duplicados_o_similares: 9,
         nivel_promedio_similitud: 0.92,
-        registros_rechazados: 5,
+        // registros_rechazados eliminado del mock porque ya no lo mostramos en frontend
         ultimos_errores: [
-            { accion: "insertar_registro", estado: "error", mensajelog: "Título vacío", fechalog: "2025-05-10T13:00:00" },
-            { accion: "busqueda_semantica", estado: "error", mensajelog: "Texto vacío", fechalog: "2025-05-09T11:30:00" },
+            { nombre: "Victor", accion: "insertar_registro", estado: "error", mensajelog: "Título vacío", fechalog: "2025-05-10T13:00:00" },
+            { nombre: "Yarik Gonzales", accion: "busqueda_semantica", estado: "error", mensajelog: "Texto vacío", fechalog: "2025-05-09T11:30:00" },
         ],
     },
     agente_conversacional: {
@@ -304,29 +304,27 @@ export default function DashboardPage() {
                                 <div className="px-4 py-5">
                                     <ResponsiveContainer width="100%" height={220}>
                                         <BarChart
-                                            data={d.actividad_usuarios.registros_por_usuario.map((r: any) => ({
-                                                ...r,
-                                                nombre: r.nombre // usar directamente el nombre
-                                            }))}
+                                            data={Array.isArray(d.actividad_usuarios?.registros_por_usuario)
+                                                ? d.actividad_usuarios.registros_por_usuario.map((r: any) => ({
+                                                    ...r,
+                                                    nombre: r.nombre
+                                                }))
+                                                : []}
                                             barSize={36}
                                         >
                                             <CartesianGrid strokeDasharray="3 3" stroke="#f1f4f8" vertical={false} />
-                                            <XAxis
-                                                dataKey="nombre"
-                                                tick={{ fontSize: 11, fill: "#94a3b8" }}
-                                                axisLine={false}
-                                                tickLine={false}
-                                            />
+                                            <XAxis dataKey="nombre" tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
                                             <YAxis tick={{ fontSize: 11, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
                                             <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(59,130,246,0.04)" }} />
                                             <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                                                {d.actividad_usuarios.registros_por_usuario.map((_: any, i: number) => (
-                                                    <Cell key={i} fill={["#3b82f6", "#6366f1", "#8b5cf6", "#0ea5e9"][i % 4]} />
-                                                ))}
+                                                {Array.isArray(d.actividad_usuarios?.registros_por_usuario) &&
+                                                    d.actividad_usuarios.registros_por_usuario.map((_: any, i: number) => (
+                                                        <Cell key={i} fill={["#3b82f6", "#6366f1", "#8b5cf6", "#0ea5e9"][i % 4]} />
+                                                    ))}
                                             </Bar>
                                         </BarChart>
-
                                     </ResponsiveContainer>
+
                                 </div>
                             </div>
 
@@ -352,38 +350,33 @@ export default function DashboardPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {d.actividad_usuarios.ultimos_registros.map((r: any, i: number) => (
-                                            <tr
-                                                key={i}
-                                                style={{ borderTop: "1px solid #f1f4f8" }}
-                                                onMouseEnter={e => (e.currentTarget.style.background = "#fafbfc")}
-                                                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-                                            >
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[13px] font-semibold text-slate-700">{r.nombre}</span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[13px] font-semibold text-slate-700">{r.titulolibro}</span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[13px] text-slate-500">{r.autor}</span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span
-                                                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
-                                                        style={{ background: "#eff6ff", color: "#2563eb" }}
-                                                    >
-                                                        {r.tipo}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[12px] text-slate-400">
-                                                        {new Date(r.fechareg).toLocaleDateString("es-ES")}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {Array.isArray(d.actividad_usuarios?.ultimos_registros) &&
+                                            d.actividad_usuarios.ultimos_registros.map((r: any, i: number) => (
+                                                <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[13px] font-semibold text-slate-700">{r.nombre}</span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[13px] font-semibold text-slate-700">{r.titulolibro}</span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[13px] text-slate-500">{r.autor}</span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
+                                                            style={{ background: "#eff6ff", color: "#2563eb" }}>
+                                                            {r.tipo}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[12px] text-slate-400">
+                                                            {new Date(r.fechareg).toLocaleDateString("es-ES")}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                     </tbody>
+
                                 </table>
 
                             </div>
@@ -414,32 +407,36 @@ export default function DashboardPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {d.calidad_datos.ultimos_errores.map((e: any, i: number) => (
-                                            <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}
-                                                onMouseEnter={ev => (ev.currentTarget.style.background = "#fafbfc")}
-                                                onMouseLeave={ev => (ev.currentTarget.style.background = "transparent")}>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[13px] font-semibold text-slate-700">{e.nombre}</span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[13px] font-medium text-slate-600">{e.accion}</span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
-                                                        style={{ background: "#fef2f2", color: "#dc2626" }}>
-                                                        <span className="w-1 h-1 rounded-full bg-red-400" />
-                                                        {e.estado}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[13px] text-slate-500">{e.mensajelog}</span>
-                                                </td>
-                                                <td className="px-6 py-3.5">
-                                                    <span className="text-[12px] text-slate-400">{new Date(e.fechalog).toLocaleDateString("es-ES")}</span>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {Array.isArray(d.calidad_datos?.ultimos_errores) &&
+                                            d.calidad_datos.ultimos_errores.map((e: any, i: number) => (
+                                                <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}
+                                                    onMouseEnter={ev => (ev.currentTarget.style.background = "#fafbfc")}
+                                                    onMouseLeave={ev => (ev.currentTarget.style.background = "transparent")}>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[13px] font-semibold text-slate-700">{e.nombre}</span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[13px] font-medium text-slate-600">{e.accion}</span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
+                                                            style={{ background: "#fef2f2", color: "#dc2626" }}>
+                                                            <span className="w-1 h-1 rounded-full bg-red-400" />
+                                                            {e.estado}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[13px] text-slate-500">{e.mensajelog}</span>
+                                                    </td>
+                                                    <td className="px-6 py-3.5">
+                                                        <span className="text-[12px] text-slate-400">
+                                                            {new Date(e.fechalog).toLocaleDateString("es-ES")}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
