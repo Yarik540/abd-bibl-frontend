@@ -363,22 +363,22 @@ export default function DashboardPage() {
                                                         <span className="text-[13px] text-slate-500">{r.autor}</span>
                                                     </td>
                                                     <td className="px-6 py-3.5">
-                                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
-                                                            style={{ background: "#eff6ff", color: "#2563eb" }}>
+                                                        <span
+                                                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
+                                                            style={{ background: "#eff6ff", color: "#2563eb" }}
+                                                        >
                                                             {r.tipo}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-3.5">
                                                         <span className="text-[12px] text-slate-400">
-                                                            {new Date(r.fechareg).toLocaleDateString("es-ES")}
+                                                            {new Date(r.fechareg).toLocaleString("es-EC", { timeZone: "America/Guayaquil" })}
                                                         </span>
                                                     </td>
                                                 </tr>
                                             ))}
                                     </tbody>
-
                                 </table>
-
                             </div>
                         </div>
                     )}
@@ -402,16 +402,24 @@ export default function DashboardPage() {
                                     <thead>
                                         <tr style={{ background: "#f8fafc" }}>
                                             {["Estudiante", "Acción", "Estado", "Mensaje", "Fecha"].map(h => (
-                                                <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
+                                                <th
+                                                    key={h}
+                                                    className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider"
+                                                >
+                                                    {h}
+                                                </th>
                                             ))}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {Array.isArray(d.calidad_datos?.ultimos_errores) &&
                                             d.calidad_datos.ultimos_errores.map((e: any, i: number) => (
-                                                <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}
+                                                <tr
+                                                    key={i}
+                                                    style={{ borderTop: "1px solid #f1f4f8" }}
                                                     onMouseEnter={ev => (ev.currentTarget.style.background = "#fafbfc")}
-                                                    onMouseLeave={ev => (ev.currentTarget.style.background = "transparent")}>
+                                                    onMouseLeave={ev => (ev.currentTarget.style.background = "transparent")}
+                                                >
                                                     <td className="px-6 py-3.5">
                                                         <span className="text-[13px] font-semibold text-slate-700">{e.nombre}</span>
                                                     </td>
@@ -419,8 +427,10 @@ export default function DashboardPage() {
                                                         <span className="text-[13px] font-medium text-slate-600">{e.accion}</span>
                                                     </td>
                                                     <td className="px-6 py-3.5">
-                                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
-                                                            style={{ background: "#fef2f2", color: "#dc2626" }}>
+                                                        <span
+                                                            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
+                                                            style={{ background: "#fef2f2", color: "#dc2626" }}
+                                                        >
                                                             <span className="w-1 h-1 rounded-full bg-red-400" />
                                                             {e.estado}
                                                         </span>
@@ -430,14 +440,14 @@ export default function DashboardPage() {
                                                     </td>
                                                     <td className="px-6 py-3.5">
                                                         <span className="text-[12px] text-slate-400">
-                                                            {new Date(e.fechalog).toLocaleDateString("es-ES")}
+                                                            {new Date(e.fechalog).toLocaleString("es-EC", { timeZone: "America/Guayaquil" })}
                                                         </span>
                                                     </td>
                                                 </tr>
                                             ))}
                                     </tbody>
-
                                 </table>
+
                             </div>
                         </div>
                     )}

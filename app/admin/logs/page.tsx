@@ -315,10 +315,12 @@ export default function LogsPage() {
                                                 <span className="text-[13px] text-slate-500 truncate block">{l.mensajelog}</span>
                                             </td>
                                             <td className="px-6 py-3.5">
-                                                <span className="text-[12px] font-mono text-slate-400">{l.idusu?.slice(0, 8)}…</span>
+                                                <span className="text-[13px] font-semibold text-slate-700">{l.nombre ?? "desconocido"}</span>
                                             </td>
                                             <td className="px-6 py-3.5">
-                                                <span className="text-[12px] text-slate-400">{new Date(l.fechalog).toLocaleString("es-ES")}</span>
+                                                <span className="text-[12px] text-slate-400">
+                                                    {new Date(l.fechalog).toLocaleString("es-EC", { timeZone: "America/Guayaquil" })}
+                                                </span>
                                             </td>
                                         </tr>
                                     ))}
@@ -339,25 +341,37 @@ export default function LogsPage() {
                                         Mostrando {(pagina - 1) * PAGE_SIZE + 1}–{Math.min(pagina * PAGE_SIZE, logs.length)} de {logs.length} logs
                                     </p>
                                     <div className="flex items-center gap-1">
-                                        <button onClick={() => setPagina(p => Math.max(1, p - 1))} disabled={pagina === 1}
-                                            className="p-1.5 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                                            style={{ border: "1px solid #e2e8f0", color: "#64748b" }}>
-                                            <ChevronLeft className="h-4 w-4" />
-                                        </button>
-                                        {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(n => (
-                                            <button key={n} onClick={() => setPagina(n)}
-                                                className="w-8 h-8 rounded-lg text-[12px] font-semibold transition-all"
-                                                style={n === pagina
-                                                    ? { background: "linear-gradient(135deg, #3b82f6, #1d4ed8)", color: "#fff" }
-                                                    : { border: "1px solid #e2e8f0", color: "#64748b" }}>
-                                                {n}
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                onClick={() => setPagina(p => Math.max(1, p - 1))}
+                                                disabled={pagina === 1}
+                                                className="p-1.5 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                                style={{ border: "1px solid #e2e8f0", color: "#64748b" }}
+                                            >
+                                                <ChevronLeft className="h-4 w-4" />
                                             </button>
-                                        ))}
-                                        <button onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))} disabled={pagina === totalPaginas}
-                                            className="p-1.5 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                                            style={{ border: "1px solid #e2e8f0", color: "#64748b" }}>
-                                            <ChevronRight className="h-4 w-4" />
-                                        </button>
+                                            {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(n => (
+                                                <button
+                                                    key={n}
+                                                    onClick={() => setPagina(n)}
+                                                    className="w-8 h-8 rounded-lg text-[12px] font-semibold transition-all"
+                                                    style={n === pagina
+                                                        ? { background: "linear-gradient(135deg, #3b82f6, #1d4ed8)", color: "#fff" }
+                                                        : { border: "1px solid #e2e8f0", color: "#64748b" }}
+                                                >
+                                                    {n}
+                                                </button>
+                                            ))}
+                                            <button
+                                                onClick={() => setPagina(p => Math.min(totalPaginas, p + 1))}
+                                                disabled={pagina === totalPaginas}
+                                                className="p-1.5 rounded-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                                style={{ border: "1px solid #e2e8f0", color: "#64748b" }}
+                                            >
+                                                <ChevronRight className="h-4 w-4" />
+                                            </button>
+                                        </div>
+
                                     </div>
                                 </div>
                             )}

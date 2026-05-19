@@ -256,117 +256,145 @@ export default function ClientePage() {
 
           {/* Tab: Nuevo Registro */}
           {tab === "nuevo" && (
-            <div className="rounded-xl overflow-hidden max-w-xl mx-auto"
-              style={{ background: "#fff", border: "1px solid #e8ecf0", boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03)" }}>
-              {/* Card accent line */}
-              <div className="h-[2px] rounded-t-xl" style={{ background: "#3b82f6" }} />
-              <div className="px-6 py-5 flex items-center justify-between" style={{ borderBottom: "1px solid #f1f4f8" }}>
-                <div>
-                  <p className="text-[13px] font-semibold text-slate-700">Ingresar nuevo registro</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Completa los datos del libro</p>
-                </div>
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(59,130,246,0.1)" }}>
-                  <PlusCircle className="h-4 w-4" style={{ color: "#3b82f6" }} />
-                </div>
-              </div>
+            <div className="flex justify-center">
+              <div className="w-full max-w-xl rounded-2xl overflow-hidden"
+                style={{ background: "#fff", boxShadow: "0 4px 20px rgba(59,130,246,0.10)" }}>
 
-              <div className="px-6 py-5 flex flex-col gap-4">
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Título del Libro *</label>
-                  <input type="text" value={form.titulolibro}
-                    onChange={e => { setForm({ ...form, titulolibro: e.target.value }); setFormError("") }}
-                    placeholder="Ej: Cien años de soledad"
-                    className="w-full px-4 py-2.5 rounded-lg text-[13px] text-slate-700 transition-all"
-                    style={{ border: "1px solid #e2e8f0", background: "#fafbfc", outline: "none" }}
-                    onFocus={e => { e.currentTarget.style.border = "1px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
-                    onBlur={e => { e.currentTarget.style.border = "1px solid #e2e8f0"; e.currentTarget.style.background = "#fafbfc"; e.currentTarget.style.boxShadow = "none" }} />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Autor *</label>
-                  <input type="text" value={form.autor}
-                    onChange={e => { setForm({ ...form, autor: e.target.value }); setFormError("") }}
-                    placeholder="Ej: Gabriel García Márquez"
-                    className="w-full px-4 py-2.5 rounded-lg text-[13px] text-slate-700 transition-all"
-                    style={{ border: "1px solid #e2e8f0", background: "#fafbfc", outline: "none" }}
-                    onFocus={e => { e.currentTarget.style.border = "1px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
-                    onBlur={e => { e.currentTarget.style.border = "1px solid #e2e8f0"; e.currentTarget.style.background = "#fafbfc"; e.currentTarget.style.boxShadow = "none" }} />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Tipo *</label>
-                  <select value={form.tipo}
-                    onChange={e => { setForm({ ...form, tipo: e.target.value }); setFormError("") }}
-                    className="w-full px-4 py-2.5 rounded-lg text-[13px] text-slate-700 transition-all"
-                    style={{ border: "1px solid #e2e8f0", background: "#fafbfc", outline: "none" }}
-                    onFocus={e => { e.currentTarget.style.border = "1px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
-                    onBlur={e => { e.currentTarget.style.border = "1px solid #e2e8f0"; e.currentTarget.style.background = "#fafbfc"; e.currentTarget.style.boxShadow = "none" }}>
-                    <option value="">Selecciona un tipo</option>
-                    <option value="novela">Novela</option>
-                    <option value="cuento">Cuento</option>
-                    <option value="poesía">Poesía</option>
-                    <option value="ensayo">Ensayo</option>
-                    <option value="distopía">Distopía</option>
-                    <option value="épica">Épica</option>
-                    <option value="otro">Otro</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Contenido / Descripción</label>
-                  <textarea value={form.contenidoreg}
-                    onChange={e => setForm({ ...form, contenidoreg: e.target.value })}
-                    placeholder="Breve descripción del libro..."
-                    rows={3}
-                    className="w-full px-4 py-2.5 rounded-lg text-[13px] text-slate-700 resize-none transition-all"
-                    style={{ border: "1px solid #e2e8f0", background: "#fafbfc", outline: "none" }}
-                    onFocus={e => { e.currentTarget.style.border = "1px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
-                    onBlur={e => { e.currentTarget.style.border = "1px solid #e2e8f0"; e.currentTarget.style.background = "#fafbfc"; e.currentTarget.style.boxShadow = "none" }} />
-                </div>
-
-                {formError && (
-                  <div className="flex items-center gap-2 rounded-lg px-4 py-3 text-[13px]"
-                    style={{ background: "#fef2f2", border: "1px solid #fecaca", color: "#dc2626" }}>
-                    <AlertTriangle className="h-4 w-4 flex-shrink-0" /> {formError}
-                  </div>
-                )}
-                {formSuccess && (
-                  <div className="flex flex-col gap-1 rounded-lg px-4 py-3 text-[13px]"
-                    style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", color: "#16a34a" }}>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 flex-shrink-0" /> {formSuccess}
-                    </div>
-                    {latencia !== null && (
-                      <div className="flex items-center gap-2 text-[11px] pl-6" style={{ color: "#15803d" }}>
-                        <Clock className="h-3 w-3" /> Latencia de inserción: {latencia} ms
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <button onClick={handleSubmit} disabled={formLoading}
-                  className="w-full py-3 rounded-lg text-white font-semibold text-[13px] flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                {/* Header */}
+                <div className="px-6 pt-6 pb-5 flex items-center justify-between"
                   style={{ background: "linear-gradient(135deg, #3b82f6, #1d4ed8)", boxShadow: "0 2px 8px rgba(59,130,246,0.3)" }}
-                  onMouseEnter={e => !formLoading && (e.currentTarget.style.boxShadow = "0 4px 14px rgba(59,130,246,0.45)")}
-                  onMouseLeave={e => (e.currentTarget.style.boxShadow = "0 2px 8px rgba(59,130,246,0.3)")}>
-                  {formLoading ? (
-                    <><div className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" /> Guardando...</>
-                  ) : (
-                    <><PlusCircle className="h-4 w-4" /> Guardar Registro</>
+                >
+                  <div>
+                    <p className="text-[15px] font-bold text-white">Nuevo registro</p>
+                    <p className="text-[12px] mt-0.5" style={{ color: "rgba(255,255,255,0.65)" }}>
+                      Completa los datos de tu apunte literario
+                    </p>
+                  </div>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: "rgba(255,255,255,0.18)" }}>
+                    <PlusCircle className="h-5 w-5 text-white" />
+                  </div>
+                </div>
+
+                {/* Form body */}
+                <div className="px-6 py-6 flex flex-col gap-4">
+
+                  {/* Título */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Título</label>
+                    <input type="text" value={form.titulolibro}
+                      onChange={e => { setForm({ ...form, titulolibro: e.target.value }); setFormError("") }}
+                      placeholder="Ej: Cien años de soledad"
+                      className="w-full px-3.5 py-2.5 rounded-xl text-[13px] text-slate-700 transition-all"
+                      style={{ border: "1.5px solid #e2e8f0", background: "#f8fafc", outline: "none" }}
+                      onFocus={e => { e.currentTarget.style.border = "1.5px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
+                      onBlur={e => { e.currentTarget.style.border = "1.5px solid #e2e8f0"; e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.boxShadow = "none" }} />
+                  </div>
+
+                  {/* Autor */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Autor</label>
+                    <input type="text" value={form.autor}
+                      onChange={e => { setForm({ ...form, autor: e.target.value }); setFormError("") }}
+                      placeholder="Ej: Gabriel García Márquez"
+                      className="w-full px-3.5 py-2.5 rounded-xl text-[13px] text-slate-700 transition-all"
+                      style={{ border: "1.5px solid #e2e8f0", background: "#f8fafc", outline: "none" }}
+                      onFocus={e => { e.currentTarget.style.border = "1.5px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
+                      onBlur={e => { e.currentTarget.style.border = "1.5px solid #e2e8f0"; e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.boxShadow = "none" }} />
+                  </div>
+
+                  {/* Tipo */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Tipo</label>
+                    <select value={form.tipo}
+                      onChange={e => { setForm({ ...form, tipo: e.target.value }); setFormError("") }}
+                      className="w-full px-3.5 py-2.5 rounded-xl text-[13px] text-slate-700 transition-all"
+                      style={{ border: "1.5px solid #e2e8f0", background: "#f8fafc", outline: "none" }}
+                      onFocus={e => { e.currentTarget.style.border = "1.5px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
+                      onBlur={e => { e.currentTarget.style.border = "1.5px solid #e2e8f0"; e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.boxShadow = "none" }}>
+                      <option value="">Selecciona un tipo</option>
+                      <option value="novela">Novela</option>
+                      <option value="cuento">Cuento</option>
+                      <option value="poesía">Poesía</option>
+                      <option value="ensayo">Ensayo</option>
+                      <option value="distopía">Distopía</option>
+                      <option value="épica">Épica</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                  </div>
+
+                  {/* Contenido */}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Contenido / Descripción</label>
+                    <textarea value={form.contenidoreg}
+                      onChange={e => setForm({ ...form, contenidoreg: e.target.value })}
+                      placeholder="Breve descripción de tus apuntes..."
+                      rows={3}
+                      className="w-full px-3.5 py-2.5 rounded-xl text-[13px] text-slate-700 resize-none transition-all"
+                      style={{ border: "1.5px solid #e2e8f0", background: "#f8fafc", outline: "none" }}
+                      onFocus={e => { e.currentTarget.style.border = "1.5px solid #3b82f6"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(59,130,246,0.1)" }}
+                      onBlur={e => { e.currentTarget.style.border = "1.5px solid #e2e8f0"; e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.boxShadow = "none" }} />
+                  </div>
+
+                  {/* Error */}
+                  {formError && (
+                    <div className="flex items-center gap-2 rounded-xl px-4 py-3 text-[13px]"
+                      style={{ background: "#fef2f2", border: "1.5px solid #fecaca", color: "#dc2626" }}>
+                      <AlertTriangle className="h-4 w-4 flex-shrink-0" /> {formError}
+                    </div>
                   )}
-                </button>
+
+                  {/* Success */}
+                  {formSuccess && (
+                    <div className="flex flex-col gap-1 rounded-xl px-4 py-3"
+                      style={{ background: "linear-gradient(135deg,#ecfdf5 0%,#f0fdf4 100%)", border: "1.5px solid #bbf7d0" }}>
+                      <div className="flex items-center gap-2 text-[13px] font-semibold" style={{ color: "#166534" }}>
+                        <CheckCircle className="h-4 w-4 flex-shrink-0" /> {formSuccess}
+                      </div>
+                      {latencia !== null && (
+                        <div className="flex items-center gap-2 text-[11px] pl-6" style={{ color: "#15803d" }}>
+                          <Clock className="h-3 w-3" /> Latencia de inserción: {latencia} ms
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Submit */}
+                  <button onClick={handleSubmit} disabled={formLoading}
+                    className="w-full py-3 rounded-xl text-white font-bold text-[13px] flex items-center justify-center gap-2 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                    style={{ background: "linear-gradient(135deg, #3b82f6, #1d4ed8)", boxShadow: "0 2px 8px rgba(59,130,246,0.3)" }}
+                    onMouseEnter={e => { if (!formLoading) { e.currentTarget.style.boxShadow = "0 6px 20px rgba(59,130,246,0.45)"; e.currentTarget.style.transform = "translateY(-1px)" } }}
+                    onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 6px 20px rgba(29,78,216,0.45)"; e.currentTarget.style.transform = "translateY(0)" }}>
+                    {formLoading
+                      ? <><div className="animate-spin h-4 w-4 rounded-full border-2 border-white border-t-transparent" /> Guardando...</>
+                      : <><PlusCircle className="h-4 w-4" /> Guardar Registro</>}
+                  </button>
+
+                </div>
               </div>
             </div>
           )}
 
-          {/* Tab: Mis Registros */}
+
+
+          {/* Tab: Mis registros */}
+
           {tab === "mis-registros" && (
             <div className="rounded-xl overflow-hidden"
               style={{ background: "#fff", border: "1px solid #e8ecf0", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+
+              {/* Header */}
               <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid #f1f4f8" }}>
                 <div>
                   <p className="text-[13px] font-semibold text-slate-700">Mis Registros</p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Libros registrados en el sistema</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">Apuntes guardados en tu biblioteca</p>
                 </div>
-                <List className="h-4 w-4 text-slate-300" />
+                <span className="text-[11px] font-semibold px-3 py-1 rounded-full"
+                  style={{ background: "#1e3a5f", color: "#bfdbfe" }}>
+                  {registros.length} apuntes
+                </span>
               </div>
+
               {regLoading ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-4">
                   <div className="relative w-10 h-10">
@@ -375,51 +403,83 @@ export default function ClientePage() {
                   </div>
                   <p className="text-[13px] text-slate-400">Cargando registros...</p>
                 </div>
+              ) : registros.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-2">
+                  <BookOpen className="h-8 w-8 text-slate-200" />
+                  <p className="text-[13px] text-slate-400">No tienes registros aún</p>
+                </div>
               ) : (
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr style={{ background: "#f8fafc" }}>
-                      {["Título", "Autor", "Tipo", "Descripción", "Fecha"].map(h => (
-                        <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {registros.map((r: any, i: number) => (
-                      <tr key={i} style={{ borderTop: "1px solid #f1f4f8" }}
-                        onMouseEnter={e => (e.currentTarget.style.background = "#fafbfc")}
-                        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-                        <td className="px-6 py-3.5">
-                          <span className="text-[13px] font-semibold text-slate-700">{r.titulolibro}</span>
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <span className="text-[13px] text-slate-500">{r.autor}</span>
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium"
-                            style={{ background: "#eff6ff", color: "#2563eb" }}>
+                <div className="p-6 grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
+                  {registros.map((r: any, i: number) => {
+                    const tipoMap: Record<string, { accent: string; bg: string; light: string; color: string; icon: React.ReactNode }> = {
+                      novela: { accent: "#3b82f6", bg: "linear-gradient(135deg,#eff6ff 0%,#fff 60%)", light: "#dbeafe", color: "#1e40af", icon: <BookOpen className="h-4 w-4" style={{ color: "#1d4ed8" }} /> },
+                      cuento: { accent: "#f59e0b", bg: "linear-gradient(135deg,#fffbeb 0%,#fff 60%)", light: "#fef3c7", color: "#92400e", icon: <BookOpen className="h-4 w-4" style={{ color: "#92400e" }} /> },
+                      poesía: { accent: "#10b981", bg: "linear-gradient(135deg,#ecfdf5 0%,#fff 60%)", light: "#d1fae5", color: "#065f46", icon: <BookOpen className="h-4 w-4" style={{ color: "#065f46" }} /> },
+                      ensayo: { accent: "#ec4899", bg: "linear-gradient(135deg,#fdf2f8 0%,#fff 60%)", light: "#fce7f3", color: "#9d174d", icon: <BookOpen className="h-4 w-4" style={{ color: "#9d174d" }} /> },
+                      distopía: { accent: "#8b5cf6", bg: "linear-gradient(135deg,#f3f0ff 0%,#fff 60%)", light: "#ede9fe", color: "#5b21b6", icon: <BookOpen className="h-4 w-4" style={{ color: "#5b21b6" }} /> },
+                      épica: { accent: "#f97316", bg: "linear-gradient(135deg,#fff7ed 0%,#fff 60%)", light: "#ffedd5", color: "#9a3412", icon: <BookOpen className="h-4 w-4" style={{ color: "#9a3412" }} /> },
+                      otro: { accent: "#64748b", bg: "linear-gradient(135deg,#f8fafc 0%,#fff 60%)", light: "#e2e8f0", color: "#334155", icon: <BookOpen className="h-4 w-4" style={{ color: "#334155" }} /> },
+                    }
+                    const cfg = tipoMap[r.tipo?.toLowerCase()] ?? tipoMap["otro"]
+
+                    return (
+                      <div key={i} className="rounded-2xl overflow-hidden transition-all duration-200"
+                        style={{
+                          background: "#fff",
+                          boxShadow: `0 2px 10px ${cfg.accent}22`,
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 12px 28px ${cfg.accent}28` }}
+                        onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = `0 2px 10px ${cfg.accent}22` }}>
+
+                        {/* Card top with gradient bg */}
+                        <div className="px-5 pt-5 pb-4 relative" style={{ background: cfg.bg }}>
+                          {/* Left accent bar */}
+                          <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl" style={{ background: cfg.accent }} />
+
+                          {/* Icon */}
+                          <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style={{ background: cfg.light }}>
+                            {cfg.icon}
+                          </div>
+
+                          {/* Badge */}
+                          <span className="absolute top-4 right-4 text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
+                            style={{ background: cfg.light, color: cfg.color }}>
                             {r.tipo}
                           </span>
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <span className="text-[13px] text-slate-400 max-w-[200px] truncate block">{r.contenidoreg || "—"}</span>
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <span className="text-[12px] text-slate-400">{new Date(r.fechareg).toLocaleDateString("es-ES")}</span>
-                        </td>
-                      </tr>
-                    ))}
-                    {registros.length === 0 && (
-                      <tr>
-                        <td colSpan={5} className="px-6 py-12 text-center text-[13px] text-slate-400">No tienes registros aún</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+
+                          <p className="text-[14px] font-bold text-slate-800 leading-snug pr-16">{r.titulolibro}</p>
+                          <p className="text-[12px] text-slate-500 mt-1 flex items-center gap-1">
+                            <span style={{ color: cfg.accent }}>●</span> {r.autor}
+                          </p>
+                        </div>
+
+                        {/* Divider */}
+                        <div style={{ height: "1px", background: "#f1f5f9", margin: "0 20px" }} />
+
+                        {/* Description */}
+                        <p className="text-[12px] leading-relaxed px-5 py-3"
+                          style={{ color: "#7c8fa0", minHeight: "52px" }}>
+                          {r.contenidoreg || <span className="italic text-slate-300">Sin descripción</span>}
+                        </p>
+
+                        {/* Footer */}
+                        <div className="px-5 pb-4 flex items-center justify-between">
+                          <span className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                            <Clock className="h-3 w-3" />
+                            {new Date(r.fechareg).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}
+                          </span>
+                          <button className="text-[11px] font-semibold px-3 py-1.5 rounded-full transition-opacity"
+                            style={{ background: cfg.light, color: cfg.color, border: "none", cursor: "pointer" }}>
+                            Ver más
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
               )}
             </div>
           )}
-
           {/* Tab: Búsqueda Semántica */}
           {tab === "busqueda" && (
             <div className="flex flex-col gap-5">
@@ -430,7 +490,7 @@ export default function ClientePage() {
                 <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid #f1f4f8" }}>
                   <div>
                     <p className="text-[13px] font-semibold text-slate-700">Búsqueda Semántica</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Encuentra libros por significado o contexto</p>
+                    <p className="text-[11px] text-slate-400 mt-0.5">Encuentra tus apuntes por significado o contexto</p>
                   </div>
                   <Search className="h-4 w-4 text-slate-300" />
                 </div>
